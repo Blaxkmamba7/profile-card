@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile Card Component</title>
+<link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dark-cyan: #19a79e;
+    --desaturated-blue: #6b7a99;
+    --dark-blue: #2d3248;
+    --white: #ffffff;
+    --light-grey: #f0f0f0;
+  }
+
+  body {
+    font-family: 'Kumbh Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--dark-cyan) 0%, #11748d 50%, var(--desaturated-blue) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  body::before, body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  body::before {
+    width: 520px; height: 520px;
+    top: -200px; left: -180px;
+  }
+  body::after {
+    width: 520px; height: 520px;
+    bottom: -200px; right: -180px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    width: 330px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.25);
+    transform: translateY(30px);
+    opacity: 0;
+    animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes slideUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .card__cover {
+    height: 140px;
+    background: linear-gradient(135deg, var(--dark-cyan), #11748d);
+    position: relative;
+    overflow: hidden;
+  }
+  .card__cover::before, .card__cover::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .card__cover::before { width: 300px; height: 300px; top: -100px; left: -120px; }
+  .card__cover::after  { width: 200px; height: 200px; top: 20px; right: -100px; }
+
+  .card__avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -48px;
+    position: relative;
+    z-index: 2;
+  }
+  .card__avatar {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    border: 4px solid var(--white);
+    object-fit: cover;
+    background: var(--light-grey);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  .card__avatar:hover { transform: scale(1.07); }
+
+  .card__body {
+    text-align: center;
+    padding: 20px 30px 28px;
+  }
+
+  .card__name-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .card__name {
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+  .card__age {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--desaturated-blue);
+  }
+  .card__location {
+    font-size: 0.85rem;
+    color: var(--desaturated-blue);
+    margin-bottom: 20px;
+  }
+
+  .card__divider {
+    height: 1px;
+    background: var(--light-grey);
+    margin: 0 -30px;
+  }
+
+  .card__stats {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 22px;
+    gap: 8px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .stat__value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark-blue);
+    transition: color 0.2s;
+  }
+  .stat:hover .stat__value { color: var(--dark-cyan); }
+  .stat__label {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--desaturated-blue);
+  }
+
+  
+  .stat {
+    position: relative;
+  }
+  .stat__tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--dark-blue);
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .stat__tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--dark-blue);
+  }
+  .stat:hover .stat__tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  
+  .card__follow {
+    display: block;
+    margin: 24px auto 0;
+    width: 100%;
+    padding: 12px;
+    background: var(--dark-cyan);
+    color: var(--white);
+    font-family: 'Kumbh Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+    box-shadow: 0 6px 18px rgba(25,167,158,0.35);
+  }
+  .card__follow:hover {
+    background: #0f8880;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(25,167,158,0.45);
+  }
+  .card__follow:active { transform: translateY(0); }
+  .card__follow.following {
+    background: var(--dark-blue);
+    box-shadow: 0 6px 18px rgba(45,50,72,0.25);
+  }
+</style>
+</head>
+<body>
+
+<article class="card" role="article" aria-label="Profile card">
+  <div class="card__cover"></div>
+
+  <div class="card__avatar-wrap">
+    <div class="card__avatar" title="ABDULSAMAD BASHIR">👤</div>
+  </div>
+
+  <div class="card__body">
+    <div class="card__name-row">
+      <span class="card__name">ABDULSAMAD BASHIR</span>
+      <span class="card__age">26</span>
+    </div>
+    <p class="card__location">Kano, Nigeria</p>
+
+    <div class="card__divider"></div>
+
+    <div class="card__stats">
+      <div class="stat" tabindex="0" aria-label="80K followers">
+        <span class="stat__value" id="followers">80K</span>
+        <span class="stat__label">Followers</span>
+        <span class="stat__tooltip">80,000 followers</span>
+      </div>
+      <div class="stat" tabindex="0" aria-label="803K likes">
+        <span class="stat__value">803K</span>
+        <span class="stat__label">Likes</span>
+        <span class="stat__tooltip">803,000 likes</span>
+      </div>
+      <div class="stat" tabindex="0" aria-label="1.4K photos">
+        <span class="stat__value">1.4K</span>
+        <span class="stat__label">Photos</span>
+        <span class="stat__tooltip">1,400 photos</span>
+      </div>
+    </div>
+
+    <button class="card__follow" id="followBtn" onclick="toggleFollow()">Follow</button>
+  </div>
+</article>
+
+<script>
+  let following = false;
+  let count = 80;
+
+  function toggleFollow() {
+    following = !following;
+    const btn = document.getElementById('followBtn');
+    const followers = document.getElementById('followers');
+
+    if (following) {
+      btn.textContent = '✓ Following';
+      btn.classList.add('following');
+      count = 81;
+      animateCount(followers, 81);
+    } else {
+      btn.textContent = 'Follow';
+      btn.classList.remove('following');
+      count = 80;
+      animateCount(followers, 80);
+    }
+  }
+
+  function animateCount(el, target) {
+    const suffix = 'K';
+    const start = following ? 80 : 81;
+    const duration = 400;
+    const startTime = performance.now();
+
+    function step(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const val = Math.round(start + (target - start) * progress);
+      el.textContent = val + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+</script>
+</body>
+</html>
